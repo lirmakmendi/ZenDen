@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">ZenDen</string>
+    <string name="ZenDen">ZenDen</string>
+    <string name="create_account">הרשמה</string>
+    <string name="welcome">ברוך שובך</string>
+    <string name="first_name">שם פרטי</string>
+    <string name="last_name">שם משפחה</string>
+    <string name="email">אימייל</string>
+    <string name="password">סיסמה</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="terms_and_conditions">על ידי המשך השימוש אתה מקבל את מדיניות הפרטיות ותנאי השימוש שלנו</string>
+    <string name="terms_and_conditions_header">תנאי שימוש</string>
+    <string name="register">הרשמה</string>
+    <string name="login">התחברות</string>
+    <string name="or">או</string>
+    <string name="go_to_login">כבר יש לך משתמש? התחבר כאן</string>
+    <string name="already_have_account">כבר יש לך משתמש?</string>
+    <string name="dont_have_account">אין לך משתמש?</string>
+    <string name="forgot_password">שכחתי את הסיסמה</string>
+    <string name="dashboard">דף הבית</string>
+    <string name="logout">התנתק</string>
+    <string name="menu">תפריט</string>
+    <string name="navigation_header">App Drawer</string>
+    <string name="relaxation_techniques">הרגעה</string>
+    <string name="measure_now">מדוד עכשיו</string>
+
+
+</resources>

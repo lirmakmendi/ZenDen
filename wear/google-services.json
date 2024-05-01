@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "429046226876",
+    "project_id": "sceproject-zenden",
+    "storage_bucket": "sceproject-zenden.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429046226876:android:53296ab7c657a15c2595b9",
+        "android_client_info": {
+          "package_name": "com.sceproject.zenden"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf96GIdW0_pIGb-8Iv_ZJhK5XDm6I7jkc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
