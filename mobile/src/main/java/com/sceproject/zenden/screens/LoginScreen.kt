@@ -1,5 +1,6 @@
 package com.sceproject.zenden.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,19 +36,18 @@ import com.sceproject.zenden.navigation.ZenDenAppRouter
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-
         Surface(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(28.dp)
         ) {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -55,7 +56,8 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 HeadingTextComponent(value = stringResource(id = R.string.welcome))
                 Spacer(modifier = Modifier.height(20.dp))
 
-                MyTextFieldComponent(labelValue = stringResource(id = R.string.email),
+                MyTextFieldComponent(
+                    labelValue = stringResource(id = R.string.email),
                     painterResource(id = R.drawable.message),
                     onTextChanged = {
                         loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
@@ -95,14 +97,18 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
             }
         }
 
-        if(loginViewModel.loginInProgress.value) {
+        if (loginViewModel.loginInProgress.value) {
             CircularProgressIndicator()
         }
     }
 
+    val errorMessage = loginViewModel.errorMessage.value
+    if (errorMessage != null) {
+        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+        loginViewModel.errorMessage.value = null
+    }
 
     SystemBackButtonHandler {
         ZenDenAppRouter.navigateTo(Screen.SignUpScreen)
     }
 }
-

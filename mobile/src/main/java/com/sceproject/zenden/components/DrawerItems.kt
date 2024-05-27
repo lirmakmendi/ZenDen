@@ -54,8 +54,8 @@ data class DrawerItems(
             DrawerItems(
                 title = "הפרופיל שלי",
                 icon = Icons.Default.Person,
-                description = "Your Profile",
-                itemId = "profileScreen"
+                description = "My Profile",
+                itemId = "myProfileScreen"
             ),
             DrawerItems(
                 title = "הגדרות",

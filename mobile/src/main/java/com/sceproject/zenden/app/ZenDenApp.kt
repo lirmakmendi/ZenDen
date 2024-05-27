@@ -17,6 +17,7 @@ import com.sceproject.zenden.screens.MeasureNowScreen
 import com.sceproject.zenden.screens.RelaxationTechniquesScreen
 import com.sceproject.zenden.screens.SignUpScreen
 import com.sceproject.zenden.screens.TermsAndConditionsScreen
+import com.sceproject.zenden.screens.MyProfileScreen
 
 @Composable
 fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
@@ -60,6 +61,10 @@ fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
 
                 is Screen.MeasureNowScreen -> {
                     MeasureNowScreen()
+                }
+
+                is Screen.MyProfileScreen -> {
+                    MyProfileScreen()
                 }
 
 

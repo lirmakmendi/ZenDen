@@ -18,6 +18,7 @@ class LoginViewModel : ViewModel() {
 
     var loginInProgress = mutableStateOf(false)
 
+    var errorMessage = mutableStateOf<String?>(null)
 
     fun onEvent(event: LoginUIEvent) {
         when (event) {
@@ -45,7 +46,6 @@ class LoginViewModel : ViewModel() {
             email = loginUIState.value.email
         )
 
-
         val passwordResult = Validator.validatePassword(
             password = loginUIState.value.password
         )
@@ -56,11 +56,9 @@ class LoginViewModel : ViewModel() {
         )
 
         allValidationsPassed.value = emailResult.status && passwordResult.status
-
     }
 
     private fun login() {
-
         loginInProgress.value = true
         val email = loginUIState.value.email
         val password = loginUIState.value.password
@@ -68,23 +66,28 @@ class LoginViewModel : ViewModel() {
         FirebaseAuth
             .getInstance()
             .signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                Log.d(TAG,"Inside_login_success")
-                Log.d(TAG,"${it.isSuccessful}")
-
-                if(it.isSuccessful){
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    if (user != null && user.isEmailVerified) {
+                        loginInProgress.value = false
+                        ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+                    } else {
+                        loginInProgress.value = false
+                        FirebaseAuth.getInstance().signOut()
+                        errorMessage.value = "יש לאמת את האימייל לפני התחברות ראשונה"
+                        Log.d(TAG, "Email not verified")
+                    }
+                } else {
                     loginInProgress.value = false
-                    ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+                    errorMessage.value = "אימייל או סיסמה לא נכונים"
+                    Log.d(TAG, "Login failed: ${task.exception?.message}")
                 }
             }
             .addOnFailureListener {
-                Log.d(TAG,"Inside_login_failure")
-                Log.d(TAG,"${it.localizedMessage}")
-
                 loginInProgress.value = false
-
+                errorMessage.value = "אימייל או סיסמה לא נכונים"
+                Log.d(TAG, "Login error: ${it.localizedMessage}")
             }
-
     }
-
 }

@@ -115,7 +115,7 @@ fun <T : ViewModel> AppScaffold(
         },
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
         drawerContent = {
-            NavigationDrawerHeader(homeViewModel.emailId.value ?: "")
+            NavigationDrawerHeader(("שלום " + homeViewModel.firstName.value) ?: "")
             NavigationDrawerBody(
                 navigationDrawerItems = DrawerItems.drawerItemsList,
                 onNavigationItemClicked = { item ->
@@ -124,6 +124,7 @@ fun <T : ViewModel> AppScaffold(
                         "relaxationTechniquesScreen" -> ZenDenAppRouter.navigateTo(Screen.RelaxationScreen)
                         "anxietyTrendsScreen" -> ZenDenAppRouter.navigateTo(Screen.AnxietyTrendsScreen)
                         "measureNowScreen" -> ZenDenAppRouter.navigateTo(Screen.MeasureNowScreen)
+                        "myProfileScreen" -> ZenDenAppRouter.navigateTo(Screen.MyProfileScreen)
                         // Handle other cases as needed
                     }
                 }

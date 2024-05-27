@@ -12,6 +12,7 @@ sealed class Screen {
     object RelaxationScreen : Screen()
     object AnxietyTrendsScreen : Screen()
     object MeasureNowScreen : Screen()
+    object MyProfileScreen : Screen()
 }
 
 
