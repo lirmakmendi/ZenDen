@@ -13,6 +13,9 @@ sealed class Screen {
     object AnxietyTrendsScreen : Screen()
     object MeasureNowScreen : Screen()
     object MyProfileScreen : Screen()
+    object AdminScreen : Screen()
+    object ManageUsersScreen : Screen()
+    object DatabaseStatusScreen : Screen()
 }
 
 

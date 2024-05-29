@@ -35,6 +35,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Visibility
@@ -72,6 +73,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.sceproject.zenden.R
+import com.sceproject.zenden.components.drawer.DrawerItems
 import com.sceproject.zenden.data.viewmodels.HomeViewModel
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
@@ -135,6 +137,71 @@ fun <T : ViewModel> AppScaffold(
     }
 }
 
+@Composable
+fun <T : ViewModel> AdminScaffold(
+    title: String,
+    homeViewModel: HomeViewModel,
+    secondaryViewModel: T? = null,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    content: @Composable (PaddingValues) -> Unit
+) {
+    LaunchedEffect(key1 = true) {
+        homeViewModel.getUserData()
+    }
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            AppToolbar(
+                toolbarTitle = title,
+                logoutButtonClicked = {
+                    homeViewModel.logout()
+                },
+                navigationIconClicked = {
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                }
+            )
+        },
+        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
+        drawerContent = {
+            NavigationDrawerHeader(("שלום " + homeViewModel.firstName.value) ?: "")
+            NavigationDrawerBody(
+                navigationDrawerItems = listOf(
+                    DrawerItems(
+                        title = "מסך הבית",
+                        icon = Icons.Default.Dashboard,
+                        description = "Dashboard",
+                        itemId = "AdminDashboardScreen"
+                    ),
+                    DrawerItems(
+                        title = "סטאטוס DB",
+                        icon = Icons.Default.Dashboard,
+                        description = "DatabaseStatusScreen",
+                        itemId = "DatabaseStatusScreen"
+                    ),
+                    DrawerItems(
+                        title = "ניהול משתמשים",
+                        icon = Icons.Default.Dashboard,
+                        description = "ManageUsersScreen",
+                        itemId = "ManageUsersScreen"
+                    ),
+                ),
+                onNavigationItemClicked = { item ->
+                    when (item.itemId) {
+                        "AdminDashboardScreen" -> ZenDenAppRouter.navigateTo(Screen.AdminScreen)
+                        "ManageUsersScreen" -> ZenDenAppRouter.navigateTo(Screen.ManageUsersScreen)
+                        "DatabaseStatusScreen" -> ZenDenAppRouter.navigateTo(Screen.DatabaseStatusScreen)
+                        // Handle other admin-specific cases as needed
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        content(paddingValues)
+    }
+}
 
 
 @Composable

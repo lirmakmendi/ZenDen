@@ -1,27 +1,36 @@
 package com.sceproject.zenden.data.viewmodels
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
-
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class HomeViewModel : ViewModel() {
+    data class User(val id: String, val firstName: String, val lastName: String, val email: String)
 
     private val TAG = HomeViewModel::class.simpleName
+    private val adminEmail = "mendili@ac.sce.ac.il" // Define the admin email
 
     val isUserLoggedIn: MutableLiveData<Boolean> = MutableLiveData()
+    val isAdmin: MutableLiveData<Boolean> =
+        MutableLiveData(false) // New MutableLiveData for admin check
     val emailId: MutableLiveData<String> = MutableLiveData()
 
     val firstName: MutableLiveData<String> = MutableLiveData()
     val lastName: MutableLiveData<String> = MutableLiveData()
     val age: MutableLiveData<String> = MutableLiveData()
     val gender: MutableLiveData<String> = MutableLiveData()
-
+    val isDatabaseAlive: MutableLiveData<Boolean> = MutableLiveData()
+    val users: MutableLiveData<List<User>> = MutableLiveData()
     val resetPasswordStatus: MutableLiveData<String> = MutableLiveData()
 
     fun logout() {
@@ -54,6 +63,13 @@ class HomeViewModel : ViewModel() {
             emailId.value = user.email
             val userId = user.uid
 
+            // Check if the user is an admin based on their email
+            if (user.email == adminEmail) {
+                isAdmin.value = true
+            } else {
+                isAdmin.value = false
+            }
+
             val db = FirebaseFirestore.getInstance()
             db.collection("users").document(userId).get()
                 .addOnSuccessListener { document ->
@@ -83,9 +99,69 @@ class HomeViewModel : ViewModel() {
                         resetPasswordStatus.value = "קישור לאיפוס סיסמה נשלח לאימייל"
                     } else {
                         Log.e(TAG, "שגיאה בשליחת קישור לאימייל")
-                        resetPasswordStatus.value = "Error in sending password reset email: ${task.exception?.message}"
+                        resetPasswordStatus.value =
+                            "Error in sending password reset email: ${task.exception?.message}"
                     }
                 }
         }
     }
+
+    fun checkDatabaseStatus() {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val currentUser = firebaseAuth.currentUser
+
+        if (currentUser != null) {
+            viewModelScope.launch {
+                delay(3000) // Simulate a 3-second delay
+                val db = FirebaseFirestore.getInstance()
+                db.collection("test").document("status").get()
+                    .addOnSuccessListener { document ->
+                        isDatabaseAlive.value = true
+                        Log.d(TAG, "Database is alive")
+                    }
+                    .addOnFailureListener { exception ->
+                        isDatabaseAlive.value = false
+                        Log.d(TAG, "Database is not reachable", exception)
+                    }
+            }
+        } else {
+            Log.d(TAG, "User is not authenticated")
+            isDatabaseAlive.value = false
+        }
+    }
+
+
+    fun fetchUsers() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("users").get()
+            .addOnSuccessListener { result ->
+                val userList = result.map { document ->
+                    User(
+                        id = document.id,
+                        firstName = document.getString("firstName") ?: "",
+                        lastName = document.getString("lastName") ?: "",
+                        email = document.getString("email") ?: ""
+                    )
+                }
+                users.value = userList
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting users: ", exception)
+            }
+    }
+
+
+    fun deleteUser(userId: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("users").document(userId).delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "User successfully deleted!")
+                fetchUsers() // Refresh the user list after deletion
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error deleting user: ", exception)
+            }
+    }
+
+
 }

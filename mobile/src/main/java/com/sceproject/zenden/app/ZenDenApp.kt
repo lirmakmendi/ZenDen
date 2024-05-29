@@ -4,6 +4,8 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -11,6 +13,9 @@ import com.sceproject.zenden.screens.AnxietyTrendsScreen
 import com.sceproject.zenden.data.viewmodels.HomeViewModel
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
+import com.sceproject.zenden.screens.admin.AdminScreen
+import com.sceproject.zenden.screens.admin.DatabaseStatusScreen
+import com.sceproject.zenden.screens.admin.ManageUsersScreen
 import com.sceproject.zenden.screens.HomeScreen
 import com.sceproject.zenden.screens.LoginScreen
 import com.sceproject.zenden.screens.MeasureNowScreen
@@ -30,7 +35,11 @@ fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
     ) {
 
         if (homeViewModel.isUserLoggedIn.value == true) {
-            ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+            if (homeViewModel.isAdmin.value == true) {
+                ZenDenAppRouter.navigateTo(Screen.AdminScreen)
+            } else {
+                ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+            }
         }
 
         Crossfade(targetState = ZenDenAppRouter.currentScreen) { currentState ->
@@ -67,9 +76,18 @@ fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
                     MyProfileScreen()
                 }
 
+                is Screen.AdminScreen -> {
+                    AdminScreen()
+                }
 
+                is Screen.ManageUsersScreen -> {
+                    ManageUsersScreen()
+                }
+
+                is Screen.DatabaseStatusScreen -> {
+                    DatabaseStatusScreen()
+                }
             }
         }
-
     }
 }

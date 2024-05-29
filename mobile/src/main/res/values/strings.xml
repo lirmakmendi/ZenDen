@@ -26,6 +26,9 @@
     <string name="measure_now">מדוד עכשיו</string>
     <string name="my_profile">הפרופיל שלי</string>
     <string name="age">גיל</string>
+    <string name="database_status">ניטור מצב אפליקציה</string>
+    <string name="manage_users">ניהול משתמשים</string>
+    <string name="admin_dashboard">מסך אדמין</string>
 
 
 </resources>

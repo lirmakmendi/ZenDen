@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sceproject.zenden.data.db.rules.Validator
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
@@ -11,6 +12,7 @@ import com.sceproject.zenden.navigation.ZenDenAppRouter
 class LoginViewModel : ViewModel() {
 
     private val TAG = LoginViewModel::class.simpleName
+    private val adminEmail = "mendili@ac.sce.ac.il" // Define the admin email
 
     var loginUIState = mutableStateOf(LoginUIState())
 
@@ -70,8 +72,7 @@ class LoginViewModel : ViewModel() {
                 if (task.isSuccessful) {
                     val user = FirebaseAuth.getInstance().currentUser
                     if (user != null && user.isEmailVerified) {
-                        loginInProgress.value = false
-                        ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+                        checkUserInFirestore(user.uid)
                     } else {
                         loginInProgress.value = false
                         FirebaseAuth.getInstance().signOut()
@@ -90,4 +91,32 @@ class LoginViewModel : ViewModel() {
                 Log.d(TAG, "Login error: ${it.localizedMessage}")
             }
     }
+
+    private fun checkUserInFirestore(uid: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { document ->
+                loginInProgress.value = false
+                if (document.exists()) {
+                    val email = FirebaseAuth.getInstance().currentUser?.email
+                    if (email == adminEmail) {
+                        ZenDenAppRouter.navigateTo(Screen.AdminScreen)
+                    } else {
+                        ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+                    }
+                } else {
+                    FirebaseAuth.getInstance().signOut()
+                    errorMessage.value = "אימייל או סיסמה לא נכונים"
+                    Log.d(TAG, "User UID not found in Firestore")
+                }
+            }
+            .addOnFailureListener { exception ->
+                loginInProgress.value = false
+                FirebaseAuth.getInstance().signOut()
+                errorMessage.value = "שגיאה בבדיקת המשתמש במערכת: ${exception.localizedMessage}"
+                Log.d(TAG, "Error checking user in Firestore: ", exception)
+            }
+    }
+
+
 }
