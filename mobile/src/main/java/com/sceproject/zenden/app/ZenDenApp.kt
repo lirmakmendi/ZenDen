@@ -4,25 +4,24 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sceproject.zenden.screens.AnxietyTrendsScreen
 import com.sceproject.zenden.data.viewmodels.HomeViewModel
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
-import com.sceproject.zenden.screens.admin.AdminScreen
-import com.sceproject.zenden.screens.admin.DatabaseStatusScreen
-import com.sceproject.zenden.screens.admin.ManageUsersScreen
+import com.sceproject.zenden.screens.AnxietyTrendsScreen
 import com.sceproject.zenden.screens.HomeScreen
 import com.sceproject.zenden.screens.LoginScreen
 import com.sceproject.zenden.screens.MeasureNowScreen
+import com.sceproject.zenden.screens.MyProfileScreen
 import com.sceproject.zenden.screens.RelaxationTechniquesScreen
+import com.sceproject.zenden.screens.PanicAttackInfoScreen
 import com.sceproject.zenden.screens.SignUpScreen
 import com.sceproject.zenden.screens.TermsAndConditionsScreen
-import com.sceproject.zenden.screens.MyProfileScreen
+import com.sceproject.zenden.screens.admin.AdminScreen
+import com.sceproject.zenden.screens.admin.DatabaseStatusScreen
+import com.sceproject.zenden.screens.admin.ManageUsersScreen
 
 @Composable
 fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
@@ -86,6 +85,10 @@ fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
 
                 is Screen.DatabaseStatusScreen -> {
                     DatabaseStatusScreen()
+                }
+
+                is Screen.PanicAttackInfoScreen -> {
+                    PanicAttackInfoScreen()
                 }
             }
         }

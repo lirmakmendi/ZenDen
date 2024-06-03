@@ -2,6 +2,7 @@ package com.sceproject.zenden.components.drawer
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.MedicalInformation
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material.icons.filled.Settings
@@ -39,16 +40,16 @@ data class DrawerItems(
                 itemId = "anxietyTrendsScreen"
             ),
             DrawerItems(
-                title = "הרגעה",
+                title = "טכניקות הרגעה",
                 icon = Icons.Default.SelfImprovement,
                 description = "Learn Relaxation Techniques",
                 itemId = "relaxationTechniquesScreen"
             ),
             DrawerItems(
-                title = "תמיכה טכנית",
-                icon = Icons.Default.SupportAgent,
-                description = "Get Support",
-                itemId = "supportScreen"
+                title = "מידע על התקפי חרדה",
+                icon = Icons.Default.MedicalInformation,
+                description = "Panic Attack Information",
+                itemId = "panicAttackInfoScreen"
             ),
             DrawerItems(
                 title = "הפרופיל שלי",
@@ -56,12 +57,13 @@ data class DrawerItems(
                 description = "My Profile",
                 itemId = "myProfileScreen"
             ),
-            DrawerItems(
-                title = "הגדרות",
-                icon = Icons.Default.Settings,
-                description = "Settings Screen",
-                itemId = "settingsScreen"
-            )
+//            DrawerItems(
+//                title = "הגדרות",
+//                icon = Icons.Default.Settings,
+//                description = "Settings Screen",
+//                itemId = "settingsScreen"
+//            ),
+
         )
     }
 }
