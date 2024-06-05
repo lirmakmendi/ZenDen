@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel : ViewModel() {
     data class User(val id: String, val firstName: String, val lastName: String, val email: String)
 
-    private val TAG = HomeViewModel::class.simpleName
+    private val TAG = "ZenDen"
     private val adminEmail = "mendili@ac.sce.ac.il" // Define the admin email
 
     val isUserLoggedIn: MutableLiveData<Boolean> = MutableLiveData()

@@ -9,22 +9,25 @@ package com.sceproject.zenden.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.sceproject.zenden.presentation.app.ZenDenApp
 import com.sceproject.zenden.presentation.data.HealthServicesRepository
-import com.sceproject.zenden.presentation.presentation.ZenDenApp
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
+const val TAG = "ZenDen"
+const val PERMISSION = android.Manifest.permission.BODY_SENSORS
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setTheme(android.R.style.Theme_DeviceDefault)
+
         val healthServicesRepository by lazy { HealthServicesRepository(this) }
         setContent {
-
-            ZenDenApp(healthServicesRepository = healthServicesRepository)
+            ZenDenApp(
+                application = application,
+                healthServicesRepository = healthServicesRepository
+            )
         }
     }
 }
+
+

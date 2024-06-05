@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Required for HR sensor -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
     <!-- Needed in order to re-register for data on device startup. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-feature android:name="android.hardware.type.watch" android:required="true"/>
@@ -36,19 +37,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".presentation.service.PassiveDataService"
-            android:exported="true"
-            android:permission="com.google.android.wearable.healthservices.permission.PASSIVE_DATA_BINDING" />
+<!--        <service-->
+<!--            android:name=".presentation.service.PassiveDataService"-->
+<!--            android:exported="true"-->
+<!--            android:permission="com.google.android.wearable.healthservices.permission.PASSIVE_DATA_BINDING" />-->
 
-        <!-- Receiver that re-registers for background data after a device restart. -->
-        <receiver
-            android:name=".presentation.service.StartupReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+<!--        &lt;!&ndash; Receiver that re-registers for background data after a device restart. &ndash;&gt;-->
+<!--        <receiver-->
+<!--            android:name=".presentation.service."-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
     </application>
     <queries>

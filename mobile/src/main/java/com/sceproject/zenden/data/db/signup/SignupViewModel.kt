@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.sceproject.zenden.data.db.rules.Validator
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
@@ -164,10 +165,27 @@ class SignupViewModel : ViewModel() {
         db.collection("users").document(userId).set(user)
             .addOnSuccessListener {
                 Log.d(TAG, "User successfully written to Firestore")
+                createInitialMeasurementDocument(userId)
                 ZenDenAppRouter.navigateTo(Screen.LoginScreen)
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Error writing document to Firestore: ${e.message}")
+            }
+    }
+
+    private fun createInitialMeasurementDocument(userId: String) {
+        val db = FirebaseFirestore.getInstance()
+        val measurement = hashMapOf(
+            "hr" to 0,
+            "timestamp" to FieldValue.serverTimestamp()
+        )
+
+        db.collection("users").document(userId).collection("measurements").document("measurement").set(measurement)
+            .addOnSuccessListener {
+                Log.d(TAG, "Initial measurement document successfully written")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error writing measurement document: ${e.message}")
             }
     }
 }
