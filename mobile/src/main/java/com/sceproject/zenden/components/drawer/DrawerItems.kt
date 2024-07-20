@@ -1,6 +1,7 @@
 package com.sceproject.zenden.components.drawer
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.MedicalInformation
 import androidx.compose.material.icons.filled.Person
@@ -31,8 +32,12 @@ data class DrawerItems(
                 description = "Answer PDSS",
                 itemId = "AnswerPDSSScreen"
             ),
-
-
+            DrawerItems(
+                title = "בדיקת התקף חרדה",
+                icon = Icons.Default.Check,
+                description = "Check Panic Attack",
+                itemId = "CheckPanicAttackScreen"
+            ),
             DrawerItems(
                 title = "היסטוריית חרדה",
                 icon = Icons.Default.ShowChart,
@@ -57,13 +62,7 @@ data class DrawerItems(
                 description = "My Profile",
                 itemId = "myProfileScreen"
             ),
-//            DrawerItems(
-//                title = "הגדרות",
-//                icon = Icons.Default.Settings,
-//                description = "Settings Screen",
-//                itemId = "settingsScreen"
-//            ),
 
-        )
+            )
     }
 }

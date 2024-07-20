@@ -17,6 +17,7 @@ sealed class Screen {
     object ManageUsersScreen : Screen()
     object DatabaseStatusScreen : Screen()
     object PanicAttackInfoScreen : Screen()
+    object CheckPanicAttackScreen : Screen()
 }
 
 
