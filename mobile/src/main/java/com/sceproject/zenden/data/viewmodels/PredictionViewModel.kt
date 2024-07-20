@@ -1,19 +1,18 @@
 package com.sceproject.zenden.data.viewmodels
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.sceproject.zenden.app.PanicAttackPredictor
-import com.sceproject.zenden.navigation.Screen
-import com.sceproject.zenden.navigation.ZenDenAppRouter
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PredictionViewModel(context: Context) : ViewModel() {
     private val predictor = PanicAttackPredictor(context)
@@ -26,13 +25,6 @@ class PredictionViewModel(context: Context) : ViewModel() {
     val gender: MutableLiveData<String> = MutableLiveData()
 
     init {
-        // For initial testing, you can set these values directly
-//        age.value = "35"
-//        gender.value = "זכר"
-//        lastPdssMeasurement.value = 27
-//        lastSdnnMeasurement.value = 100f
-
-        // Uncomment these lines to fetch real data from Firebase
         fetchUserData()
         fetchLastMeasurements()
     }
@@ -105,6 +97,7 @@ class PredictionViewModel(context: Context) : ViewModel() {
             val prediction = predictor.predict(ageValue, sdnnValue, pdssValue, genderValue)
             predictionResult.value = prediction
             handlePredictionResult(prediction)
+            savePredictionToFirebase(prediction)
         } else {
             Log.d(TAG, "Incomplete data for prediction")
         }
@@ -112,5 +105,36 @@ class PredictionViewModel(context: Context) : ViewModel() {
 
     private fun handlePredictionResult(prediction: Float) {
         // Prediction results are handled within the UI now
+    }
+
+    private fun savePredictionToFirebase(prediction: Float) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val db = FirebaseFirestore.getInstance()
+
+        // Get the current timestamp
+        val timestamp = System.currentTimeMillis()
+
+        // Format the timestamp
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        val formattedTimestamp = sdf.format(timestamp)
+
+        val predictionData = hashMapOf(
+            "timestamp" to FieldValue.serverTimestamp(),
+            "prediction" to prediction,
+            "pdssScore" to lastPdssMeasurement.value,
+            "sdnn" to lastSdnnMeasurement.value
+        )
+
+        // Use the formatted timestamp as the document ID
+        val documentId = formattedTimestamp.replace(" ", "_").replace(":", "-").replace("/", "-")
+
+        db.collection("users").document(userId).collection("predictions").document(documentId)
+            .set(predictionData)
+            .addOnSuccessListener {
+                Log.d(TAG, "Prediction successfully written!")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error writing prediction", e)
+            }
     }
 }
