@@ -26,10 +26,10 @@ data class DrawerItems(
                 itemId = "dashboardScreen"
             ),
             DrawerItems(
-                title = "מדוד עכשיו",
+                title = "מענה על שאלון",
                 icon = Icons.Default.Watch,
-                description = "Measure Now",
-                itemId = "measureNowScreen"
+                description = "Answer PDSS",
+                itemId = "AnswerPDSSScreen"
             ),
 
 

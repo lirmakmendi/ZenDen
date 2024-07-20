@@ -13,7 +13,7 @@ import com.sceproject.zenden.navigation.ZenDenAppRouter
 import com.sceproject.zenden.screens.AnxietyTrendsScreen
 import com.sceproject.zenden.screens.HomeScreen
 import com.sceproject.zenden.screens.LoginScreen
-import com.sceproject.zenden.screens.MeasureNowScreen
+import com.sceproject.zenden.screens.AnswerPDSSScreen
 import com.sceproject.zenden.screens.MyProfileScreen
 import com.sceproject.zenden.screens.RelaxationTechniquesScreen
 import com.sceproject.zenden.screens.PanicAttackInfoScreen
@@ -68,8 +68,8 @@ fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
                     AnxietyTrendsScreen()
                 }
 
-                is Screen.MeasureNowScreen -> {
-                    MeasureNowScreen()
+                is Screen.AnswerPDSSScreen -> {
+                    AnswerPDSSScreen()
                 }
 
                 is Screen.MyProfileScreen -> {

@@ -125,7 +125,7 @@ fun <T : ViewModel> AppScaffold(
                         "dashboardScreen" -> ZenDenAppRouter.navigateTo(Screen.HomeScreen)
                         "relaxationTechniquesScreen" -> ZenDenAppRouter.navigateTo(Screen.RelaxationScreen)
                         "anxietyTrendsScreen" -> ZenDenAppRouter.navigateTo(Screen.AnxietyTrendsScreen)
-                        "measureNowScreen" -> ZenDenAppRouter.navigateTo(Screen.MeasureNowScreen)
+                        "AnswerPDSSScreen" -> ZenDenAppRouter.navigateTo(Screen.AnswerPDSSScreen)
                         "myProfileScreen" -> ZenDenAppRouter.navigateTo(Screen.MyProfileScreen)
                         "panicAttackInfoScreen" -> ZenDenAppRouter.navigateTo(Screen.PanicAttackInfoScreen)
                         // Handle other cases as needed
