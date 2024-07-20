@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.text.SimpleDateFormat
 import java.util.Locale
-
+import kotlin.math.exp
 
 class MessageHandler(private val context: Context) : MessageClient.OnMessageReceivedListener {
 
@@ -56,24 +56,29 @@ class MessageHandler(private val context: Context) : MessageClient.OnMessageRece
         // Create the notification
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.message) // Replace with your message icon
-            .setContentTitle("New HR Measurement") // Set the title of the notification
+            .setContentTitle("New HRV Measurement") // Set the title of the notification
             .setContentText(message) // Set the text of the notification
             .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Set the priority of the notification
 
         // Show the notification
         notificationManager.notify(1, notificationBuilder.build())
+
     }
 
     private fun saveMeasurementToFirestore(hr: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val db = FirebaseFirestore.getInstance()
-        val hrValue: Double
+        val bpm: Double
         try {
-            hrValue = hr.toDouble()
+            bpm = hr.toDouble()
+            Log.e("Firestore", bpm.toString())
         } catch (e: NumberFormatException) {
             Log.e("Firestore", "Error parsing HR value: $hr", e)
             return
         }
+
+        // Estimate SDNN based on BPM
+        val sdnnValue = estimateSDNN(bpm)
 
         // Get the current timestamp
         val timestamp = System.currentTimeMillis()
@@ -83,7 +88,7 @@ class MessageHandler(private val context: Context) : MessageClient.OnMessageRece
         val formattedTimestamp = sdf.format(timestamp)
 
         val measurement = hashMapOf(
-            "hr" to hrValue,
+            "sdnn" to sdnnValue,
             "timestamp" to FieldValue.serverTimestamp()
         )
 
@@ -97,5 +102,17 @@ class MessageHandler(private val context: Context) : MessageClient.OnMessageRece
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error writing measurement", e)
             }
+    }
+
+    private fun estimateSDNN(bpm: Double): Double {
+        // Dynamic model to estimate SDNN based on BPM
+        // Example: SDNN decreases exponentially as BPM increases
+        val maxSDNN = 100.0 // Maximum SDNN at very low BPM
+        val minSDNN = 20.0 // Minimum SDNN at very high BPM
+        val normalBPM = 70.0 // Typical BPM where SDNN is around middle value
+        val scalingFactor = 0.1 // Scaling factor to adjust the rate of decrease
+
+        val sdnn = maxSDNN * exp(-scalingFactor * (bpm - normalBPM)) + minSDNN
+        return sdnn.coerceIn(minSDNN, maxSDNN)
     }
 }

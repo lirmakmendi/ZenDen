@@ -38,6 +38,7 @@ fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
                 ZenDenAppRouter.navigateTo(Screen.AdminScreen)
             } else {
                 ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+
             }
         }
 

@@ -36,16 +36,15 @@ import com.sceproject.zenden.navigation.ZenDenAppRouter
 
 @Composable
 fun MeasureNowContent(paddingValues: PaddingValues, viewModel: MeasureNowViewModel) {
-    LaunchedEffect(Unit) {
-        viewModel.simulateHeartRateMeasurement()
-    }
-
     val measurementStatus by viewModel.measurementStatus.observeAsState(MeasureNowViewModel.MeasurementStatus.Connecting)
     val heartRate by viewModel.heartRate.observeAsState(0)
-    val gad7Responses by viewModel.gad7Responses.observeAsState(emptyMap())
+    val pdssResponses by viewModel.pdssResponses.observeAsState(emptyMap())
+    val lastHeartRateTimestamp by viewModel.lastHeartRateTimestamp.observeAsState("")
+    val lastPdssMeasurement by viewModel.lastPdssMeasurement.observeAsState(0)
+    val lastPdssTimestamp by viewModel.lastPdssTimestamp.observeAsState("")
 
     val showDialog = remember { mutableStateOf(false) }
-    val totalAnxietyScore = remember { mutableStateOf(0) }
+    val totalPanicDisorderScore = remember { mutableStateOf(0) }
 
     Surface(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
         when (measurementStatus) {
@@ -60,7 +59,10 @@ fun MeasureNowContent(paddingValues: PaddingValues, viewModel: MeasureNowViewMod
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Text("קצב דופק: $heartRate BPM", style = MaterialTheme.typography.h6)
+                    Text("שינוי בקצב הלב: $heartRate m/s", style = MaterialTheme.typography.body1)
+                    Text("זמן מדידת שינוי בקצב הלב האחרון: $lastHeartRateTimestamp", style = MaterialTheme.typography.body1)
+                    Text("המדידה האחרונה של PDSS: $lastPdssMeasurement", style = MaterialTheme.typography.body1)
+                    Text("זמן מדידת ה-PDSS האחרון: $lastPdssTimestamp", style = MaterialTheme.typography.body1)
                     Spacer(modifier = Modifier.height(20.dp))
                     // Wrapping the questions in a Card for visual distinction
                     Card(
@@ -69,13 +71,13 @@ fun MeasureNowContent(paddingValues: PaddingValues, viewModel: MeasureNowViewMod
                     ) {
                         // Questions listed here
                         Column(modifier = Modifier.padding(16.dp)) {
-                            viewModel.gad7Questions.forEach { question ->
+                            viewModel.pdssQuestions.forEach { question ->
                                 Text(question.questionText, style = MaterialTheme.typography.subtitle1)
                                 question.answers.forEachIndexed { index, answer ->
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         RadioButton(
-                                            selected = gad7Responses[question.id] == index,
-                                            onClick = { viewModel.setGad7Response(question.id, question.scores[index]) }
+                                            selected = pdssResponses[question.id] == index,
+                                            onClick = { viewModel.setPdssResponse(question.id, question.scores[index]) }
                                         )
                                         Text(answer, style = MaterialTheme.typography.body1)
                                     }
@@ -86,7 +88,7 @@ fun MeasureNowContent(paddingValues: PaddingValues, viewModel: MeasureNowViewMod
                     }
                     Button(
                         onClick = {
-                            totalAnxietyScore.value = viewModel.calculateTotalAnxiety(heartRate)
+                            totalPanicDisorderScore.value = viewModel.calculateTotalPanicDisorder(heartRate)
                             showDialog.value = true
                         },
                         modifier = Modifier.padding(top = 20.dp)
@@ -99,30 +101,39 @@ fun MeasureNowContent(paddingValues: PaddingValues, viewModel: MeasureNowViewMod
     }
 
     if (showDialog.value) {
-        CustomAlertDialog(showDialog, totalAnxietyScore)
+        CustomAlertDialog(showDialog, totalPanicDisorderScore, heartRate.toString(), viewModel)
     }
 }
 
-
 @Composable
-fun CustomAlertDialog(showDialog: MutableState<Boolean>, totalAnxietyScore: MutableState<Int>) {
+fun CustomAlertDialog(
+    showDialog: MutableState<Boolean>,
+    totalPanicDisorderScore: MutableState<Int>,
+    heartRate: String,
+    viewModel: MeasureNowViewModel
+) {
     // Context is not used in this example, but you might need it for more complex scenarios
     val context = LocalContext.current
 
-    // Construct the message and buttons dynamically based on the anxiety score
+    // Construct the message and buttons dynamically based on the panic disorder score
     val (message, buttonText, buttonAction) = when {
-        totalAnxietyScore.value > 15 -> Triple(
-            "ציון החרדה שלך די גבוה, מה שמצביע על לחץ או חרדה משמעותיים. טכניקות הרגעה יועילו.",
+        totalPanicDisorderScore.value > 21 -> Triple(
+            "ציון הפרעת הפאניקה שלך חמור ביותר. מומלץ לפנות לעזרה מקצועית.",
+            "המשך",
+            { ZenDenAppRouter.navigateTo(Screen.RelaxationScreen) }
+        )
+        totalPanicDisorderScore.value > 15 -> Triple(
+            "ציון הפרעת הפאניקה שלך קשה. כדאי לעסוק בפעילויות להפחתת הלחץ.",
             "הרגעה",
             { ZenDenAppRouter.navigateTo(Screen.RelaxationScreen) }
         )
-        totalAnxietyScore.value > 10 -> Triple(
-            "הציון שלך מרמז על חרדה בינונית. זה עשוי להיות מועיל לעסוק בפעילויות מסוימות כדי להרגע.",
+        totalPanicDisorderScore.value > 7 -> Triple(
+            "ציון הפרעת הפאניקה שלך בינוני. מומלץ לעקוב אחר התחושות ולעסוק בפעילויות מרגיעות.",
             "הרגעה",
-            { ZenDenAppRouter.navigateTo(Screen.RelaxationScreen) } // Assuming you have a StressManagementScreen
+            { ZenDenAppRouter.navigateTo(Screen.RelaxationScreen) }
         )
         else -> Triple(
-            "ציון החרדה שלך נמצא בטווח נורמלי, וזה נהדר! המשך לעקוב אחר רווחתך ולעסוק בפעילויות בריאות.",
+            "ציון הפרעת הפאניקה שלך קל או ללא. שמור על בריאותך הנפשית והמשך בפעילויות הבריאות.",
             "המשך",
             { ZenDenAppRouter.navigateTo(Screen.HomeScreen) }
         )
@@ -135,13 +146,14 @@ fun CustomAlertDialog(showDialog: MutableState<Boolean>, totalAnxietyScore: Muta
         confirmButton = {
             Button(onClick = {
                 showDialog.value = false
+                viewModel.savePdssScoreToFirestore(totalPanicDisorderScore.value)
                 buttonAction() // Invoke the action associated with the button
             }) {
                 Text(buttonText)
             }
         },
         // Only show the dismissButton if there's an alternative action for lower scores
-        dismissButton = if (totalAnxietyScore.value <= 10) null else {
+        dismissButton = if (totalPanicDisorderScore.value <= 7) null else {
             {
                 Button(onClick = { showDialog.value = false }) {
                     Text("חזור")
