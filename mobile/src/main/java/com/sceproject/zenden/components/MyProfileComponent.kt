@@ -81,6 +81,11 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
                 ) {
                     Text("אפס סיסמה")
                 }
+                Button(
+                    onClick = {  },
+                ) {
+                    Text("בדיקה!")
+                }
             }
             item {
                 if (resetPasswordStatus.isNotEmpty()) {
