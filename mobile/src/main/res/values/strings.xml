@@ -31,5 +31,9 @@
     <string name="manage_users">ניהול משתמשים</string>
     <string name="admin_dashboard">מסך אדמין</string>
 
+    <string name="toast_password_reset">שולח מייל איפוס סיסמה!</string>
+    <string name="btn_delete_user">מחק משתמש!</string>
+    <string name="test">בדיקה</string>
+
 
 </resources>

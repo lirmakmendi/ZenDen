@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.material3.android)
 //    implementation(libs.androidx.material3.android)
 //    implementation(libs.material)
 //    implementation(libs.hilt.android)
