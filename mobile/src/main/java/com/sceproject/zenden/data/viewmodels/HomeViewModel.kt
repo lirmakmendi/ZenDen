@@ -10,10 +10,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
 import deleteUserAndSubcollections
+import deleteUserDataAndInitData
 import deleteUserFromEverything
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 
 class HomeViewModel : ViewModel() {
@@ -165,13 +165,15 @@ class HomeViewModel : ViewModel() {
             }
     }
 
-    suspend fun deleteUserDataTest( onComplete: (Boolean) -> Unit) {
+    suspend fun deleteUserDataTest(onComplete: (Boolean) -> Unit) {
         val firebaseAuth = FirebaseAuth.getInstance()
-        val user = firebaseAuth.currentUser?: return
+        val user = firebaseAuth.currentUser ?: return
         val userId = user.uid
+        Log.d("testing", "here in deleteUserDataTest")
         viewModelScope.launch {
             val result = try {
-                deleteUserAndSubcollections(userId)
+                deleteUserDataAndInitData(userId)
+//                Log.d("testing", "test")
                 true
             } catch (e: Exception) {
                 Log.e("testing", " HomeViewModel -> Error in deleteUserDataTest", e)
@@ -181,9 +183,9 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    suspend fun deleteUserTest( onComplete: (Boolean) -> Unit) {
+    suspend fun deleteUserTest(onComplete: (Boolean) -> Unit) {
         val firebaseAuth = FirebaseAuth.getInstance()
-        val user = firebaseAuth.currentUser?: return
+        val user = firebaseAuth.currentUser ?: return
         val userId = user.uid
 
         viewModelScope.launch {

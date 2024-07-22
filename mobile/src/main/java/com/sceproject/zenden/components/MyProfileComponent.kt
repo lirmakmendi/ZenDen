@@ -160,25 +160,25 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
 
             onConfirmDeleteData = { _ ->
                 // TODO: after deleting the data need to to create the basic data again
-//                homeViewModel.viewModelScope.launch {
-//                    try {
-//                        Log.d("Here", "here in myProfile")
-//                        homeViewModel.deleteUserDataTest() { success ->
-//                            if (success) {
-//                                Toast.makeText(context, "User data deleted", Toast.LENGTH_SHORT)
-//                                    .show()
-//                            } else {
-//                                Toast.makeText(
-//                                    context, "Failed to delete user data", Toast.LENGTH_SHORT
-//                                ).show()
-//                            }
-//                        }
-//                    } catch (e: Exception) {
-//                        Log.e("MyProfileContent", "Error deleting user data", e)
-//                        Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-                Toast.makeText(context, "כרגע בפיתוח", Toast.LENGTH_SHORT).show()
+                homeViewModel.viewModelScope.launch {
+                    try {
+                        Log.d("Here", "here in myProfile")
+                        homeViewModel.deleteUserDataTest() { success ->
+                            if (success) {
+                                Toast.makeText(context, "User data deleted", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Toast.makeText(
+                                    context, "Failed to delete user data", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MyProfileContent", "Error deleting user data", e)
+                        Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show()
+                    }
+                }
+//                Toast.makeText(context, "כרגע בפיתוח", Toast.LENGTH_SHORT).show()
                 showPopup.value = false
             })
     }

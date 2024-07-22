@@ -1,7 +1,10 @@
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sceproject.zenden.navigation.Screen
+import com.sceproject.zenden.navigation.ZenDenAppRouter
 import kotlinx.coroutines.tasks.await
 
 
@@ -60,6 +63,41 @@ suspend fun deleteUserAndSubcollections(userId: String) {
     }
 }
 
+suspend fun deleteUserDataAndInitData(userId: String) {
+    val firebaseAuth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+
+    val user = firebaseAuth.currentUser ?: run {
+        Log.e("testing", "No authenticated user found.")
+        return
+    }
+
+    Log.d("testing", "user id: $userId")
+
+    try {
+        val document = db.collection("users").document(userId).get().await()
+
+        if (document.exists()) {
+            val userHashMap = hashMapOf(
+                "firstName" to (document.getString("firstName") ?: ""),
+                "lastName" to (document.getString("lastName") ?: ""),
+                "email" to (document.getString("email") ?: ""),
+                "age" to (document.getString("age") ?: ""),
+                "gender" to (document.getString("gender") ?: "")
+            )
+
+            db.collection("users").document(userId).set(userHashMap).await()
+            Log.d("testing", "User successfully written to Firestore")
+
+            createInitialMeasurementDocument(userId)
+            // ZenDenAppRouter.navigateTo(Screen.LoginScreen)
+        } else {
+            Log.d("testing", "No such document")
+        }
+    } catch (e: Exception) {
+        Log.e("testing", "Error fetching or writing document: ${e.message}", e)
+    }
+}
 suspend fun deleteUserFromEverything(userId: String) {
     val TAG = "testing"
     val firebaseAuth = FirebaseAuth.getInstance()
@@ -81,3 +119,20 @@ suspend fun deleteUserFromEverything(userId: String) {
     }
 }
 
+
+//i know  its not SOLID
+fun createInitialMeasurementDocument(userId: String) {
+    val db = FirebaseFirestore.getInstance()
+    val measurement = hashMapOf(
+        "hr" to 0,
+        "timestamp" to FieldValue.serverTimestamp()
+    )
+
+    db.collection("users").document(userId).collection("measurements").document("measurement").set(measurement)
+        .addOnSuccessListener {
+            Log.d("testing", "Initial measurement document successfully written")
+        }
+        .addOnFailureListener { e ->
+            Log.e("testing", "Error writing measurement document: ${e.message}")
+        }
+}
