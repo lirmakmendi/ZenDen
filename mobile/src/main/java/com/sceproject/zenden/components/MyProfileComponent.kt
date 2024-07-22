@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -49,7 +48,7 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
     val resetPasswordStatus by homeViewModel.resetPasswordStatus.observeAsState("")
 
 
-    val context = LocalContext.current;
+    val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
     val showPopup = remember { mutableStateOf(false) }
 

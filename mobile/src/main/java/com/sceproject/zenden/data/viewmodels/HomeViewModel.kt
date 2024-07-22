@@ -1,13 +1,12 @@
 package com.sceproject.zenden.data.viewmodels
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
+
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
 import deleteUserAndSubcollections
@@ -153,22 +152,6 @@ class HomeViewModel : ViewModel() {
             }
     }
 
-    fun deleteCurrentUserData() {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val userId = firebaseAuth.currentUser?.uid ?: return
-        val db = FirebaseFirestore.getInstance()
-
-        // Delete user data from Firestore
-        db.collection("users").document(userId).delete().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "User Data successfully deleted!")
-            } else {
-                Log.e(TAG, "##########User Data delete ERROR")
-                // Handle the error
-            }
-        }
-
-    }
 
     fun deleteUser(userId: String) {
         val db = FirebaseFirestore.getInstance()
