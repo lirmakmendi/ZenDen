@@ -61,38 +61,32 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
         ) {
             item {
                 Text(
-                    "פרופיל המשתמש שלי:",
-                    style = MaterialTheme.typography.h6
+                    "פרופיל המשתמש שלי:", style = MaterialTheme.typography.h6
                 )
             }
             item {
                 ProfileCard(
-                    title = "שם פרטי",
-                    value = firstName
+                    title = "שם פרטי", value = firstName
                 )
             }
             item {
                 ProfileCard(
-                    title = "שם משפחה",
-                    value = lastName
+                    title = "שם משפחה", value = lastName
                 )
             }
             item {
                 ProfileCard(
-                    title = "גיל",
-                    value = age
+                    title = "גיל", value = age
                 )
             }
             item {
                 ProfileCard(
-                    title = "מין",
-                    value = gender
+                    title = "מין", value = gender
                 )
             }
             item {
                 ProfileCard(
-                    title = "דוא\"ל",
-                    value = email
+                    title = "דוא\"ל", value = email
                 )
             }
             item {
@@ -106,9 +100,7 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
                         onClick = {
                             homeViewModel.sendPasswordResetEmail()
                             Toast.makeText(
-                                context,
-                                R.string.toast_password_reset,
-                                Toast.LENGTH_SHORT
+                                context, R.string.toast_password_reset, Toast.LENGTH_SHORT
                             ).show()
                         },
                     ) {
@@ -118,12 +110,11 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
                     ElevatedButton(
                         onClick = {
                             showPopup.value = true
-                        },
-                        colors = ButtonDefaults.buttonColors(
+                        }, colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Red
                         )
                     ) {
-                        Text("מחק משתמש", color = Color.White)
+                        Text("תפריט מחיקה", color = Color.White)
                     }
                 }
             }
@@ -142,60 +133,54 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
     }
 
     if (showPopup.value) {
-        DeleteOptionsPopup(
-            onDismiss = {
-                showPopup.value = false
-            },
-            onConfirmDeleteUser = { _ ->
-                // Implement your deletion logic here
-                homeViewModel.viewModelScope.launch {
-                    try {
-                        Log.d("Here", "here in myProfile")
-                        homeViewModel.deleteUserTest() { success ->
-                            if (success) {
-                                Toast.makeText(context, "User data deleted", Toast.LENGTH_SHORT)
-                                    .show()
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Failed to delete user data",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+        DeleteOptionsPopup(onDismiss = {
+            showPopup.value = false
+        }, onConfirmDeleteUser = { _ ->
+            homeViewModel.viewModelScope.launch {
+                try {
+                    Log.d("Here", "here in myProfile")
+                    homeViewModel.deleteUserTest() { success ->
+                        if (success) {
+                            Toast.makeText(context, "משתמש נמחק בהצלחה", Toast.LENGTH_SHORT).show()
+                            showPopup.value = false
+                            homeViewModel.navigateToLoginScreen()
+                        } else {
+                            Toast.makeText(
+                                context, "Failed to delete user data", Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    } catch (e: Exception) {
-                        Log.e("MyProfileContent", "Error deleting user data", e)
-                        Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show()
                     }
+                } catch (e: Exception) {
+                    Log.e("MyProfileContent", "Error deleting user data", e)
+                    Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show()
                 }
-            },
+            }
+
+        },
 
             onConfirmDeleteData = { _ ->
-                // Implement your deletion logic here
-                homeViewModel.viewModelScope.launch {
-                    try {
-                        Log.d("Here", "here in myProfile")
-                        homeViewModel.deleteUserDataTest() { success ->
-                            if (success) {
-                                Toast.makeText(context, "User data deleted", Toast.LENGTH_SHORT)
-                                    .show()
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Failed to delete user data",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    } catch (e: Exception) {
-                        Log.e("MyProfileContent", "Error deleting user data", e)
-                        Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
+                // TODO: after deleting the data need to to create the basic data again
+//                homeViewModel.viewModelScope.launch {
+//                    try {
+//                        Log.d("Here", "here in myProfile")
+//                        homeViewModel.deleteUserDataTest() { success ->
+//                            if (success) {
+//                                Toast.makeText(context, "User data deleted", Toast.LENGTH_SHORT)
+//                                    .show()
+//                            } else {
+//                                Toast.makeText(
+//                                    context, "Failed to delete user data", Toast.LENGTH_SHORT
+//                                ).show()
+//                            }
+//                        }
+//                    } catch (e: Exception) {
+//                        Log.e("MyProfileContent", "Error deleting user data", e)
+//                        Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+                Toast.makeText(context, "כרגע בפיתוח", Toast.LENGTH_SHORT).show()
                 showPopup.value = false
-            }
-        )
+            })
     }
 
 
@@ -204,8 +189,7 @@ fun MyProfileContent(paddingValues: PaddingValues, homeViewModel: HomeViewModel)
 @Composable
 fun ProfileCard(title: String, value: String) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp
+        modifier = Modifier.fillMaxWidth(), elevation = 4.dp
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -217,9 +201,7 @@ fun ProfileCard(title: String, value: String) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = value,
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Start
+                text = value, style = MaterialTheme.typography.body1, textAlign = TextAlign.Start
             )
         }
     }

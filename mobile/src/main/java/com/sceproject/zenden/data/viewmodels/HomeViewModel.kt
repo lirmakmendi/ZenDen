@@ -198,5 +198,9 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    fun navigateToLoginScreen() {
+        ZenDenAppRouter.navigateTo(Screen.LoginScreen)
+    }
+
 
 }
