@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.sceproject.zenden.app.MessageHandler
 import com.sceproject.zenden.app.ZenDen
+import com.sceproject.zenden.utils.NotificationScheduler
 
 class MainActivity : ComponentActivity() {
 
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
             ZenDen()
         }
         messageHandler = MessageHandler(this)
+        NotificationScheduler.scheduleDailyReminder(this)
     }
 
     override fun onDestroy() {
