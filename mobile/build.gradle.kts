@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.material3.android)
+    implementation(libs.guava)
 //    implementation(libs.androidx.material3.android)
 //    implementation(libs.material)
 //    implementation(libs.hilt.android)
@@ -77,7 +79,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+//    adding notification testing
+    androidTestImplementation(libs.androidx.work.testing)
     wearApp(project(":wear"))
+
+
 
 }
 kapt {

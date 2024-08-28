@@ -39,9 +39,11 @@ kotlinxCoroutinesAndroid = "1.7.3"
 googleGmsGoogleServices = "4.4.2"
 tensorflowLite = "2.7.0"
 tensorflowLiteSupport = "0.3.0"
+workTesting = "2.8.1"
 
 [libraries]
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "workTesting" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
 #noinspection SimilarGradleDependency
 play-services-wearable-v1810 = { module = "com.google.android.gms:play-services-wearable", version.ref = "playServicesWearableVersion" }

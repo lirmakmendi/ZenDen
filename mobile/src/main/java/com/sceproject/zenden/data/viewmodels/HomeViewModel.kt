@@ -1,15 +1,17 @@
 package com.sceproject.zenden.data.viewmodels
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
+
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
+import deleteUserAndSubcollections
+import deleteUserDataAndInitData
+import deleteUserFromEverything
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -161,6 +163,45 @@ class HomeViewModel : ViewModel() {
             .addOnFailureListener { exception ->
                 Log.d(TAG, "Error deleting user: ", exception)
             }
+    }
+
+    suspend fun deleteUserDataTest(onComplete: (Boolean) -> Unit) {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val user = firebaseAuth.currentUser ?: return
+        val userId = user.uid
+        Log.d("testing", "here in deleteUserDataTest")
+        viewModelScope.launch {
+            val result = try {
+                deleteUserDataAndInitData(userId)
+//                Log.d("testing", "test")
+                true
+            } catch (e: Exception) {
+                Log.e("testing", " HomeViewModel -> Error in deleteUserDataTest", e)
+                false
+            }
+            onComplete(result)
+        }
+    }
+
+    suspend fun deleteUserTest(onComplete: (Boolean) -> Unit) {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val user = firebaseAuth.currentUser ?: return
+        val userId = user.uid
+
+        viewModelScope.launch {
+            val result = try {
+                deleteUserFromEverything(userId)
+                true
+            } catch (e: Exception) {
+                Log.e("testing", " HomeViewModel -> Error in deleteUserTest", e)
+                false
+            }
+            onComplete(result)
+        }
+    }
+
+    fun navigateToLoginScreen() {
+        ZenDenAppRouter.navigateTo(Screen.LoginScreen)
     }
 
 
