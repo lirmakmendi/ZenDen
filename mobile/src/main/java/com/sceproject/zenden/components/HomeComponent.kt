@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import com.sceproject.zenden.data.viewmodels.HomeViewModel
@@ -70,8 +71,10 @@ fun HomeScreenContent(paddingValues: PaddingValues, viewModel: HomeViewModel) {
             item { FeelingHeader() }
             item { LastHeartbeatCard(mockHeartbeatData.value) }
             item { CurrentAnxietyLevel(currentAnxietyLevel.value) }
+            item { PositiveMessageCard() }
             item { DailySummaryGraph(dailyAnxietySummary.value) }
             item { TipsAndAdviceSection(dailyTips.value) }
+
         }
     }
 }
@@ -289,6 +292,45 @@ fun PulseLineChart(dataPoints: List<Int>, hours: List<String>, lineColor: Color 
             val x = index * widthScale
             val y = size.height - (dataPoint - minDataPoint) * heightScale
             drawCircle(color = lineColor, radius = strokeWidth * 1.5f, center = Offset(x, y))
+        }
+    }
+}
+
+@Composable
+fun PositiveMessageCard() {
+    val messages = listOf(
+        "אתה עושה עבודה נהדרת בהתמודדות עם החרדה שלך!",
+        "זכור, אתה חזק יותר ממה שאתה חושב.",
+        "נשימה עמוקה אחת בכל פעם. אתה מתקדם!",
+        "הצעדים הקטנים שלך מובילים להתקדמות גדולה.",
+        "אתה אמיץ מאוד שאתה מתמודד עם האתגרים שלך.",
+        "כל יום הוא הזדמנות חדשה. אתה מסוגל!",
+        "תהיה גאה בעצמך על כל התקדמות קטנה.",
+        "אתה לא לבד בזה. יש לך את הכוח להתגבר.",
+        "המסע שלך הוא ייחודי, וכך גם ההצלחה שלך.",
+        "זכור לחגוג את הניצחונות הקטנים שלך!"
+    )
+
+    val randomMessage = remember { messages.random() + " 😊" } // Added smiley face
+
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        elevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "הערה מותאמת אישית",
+                style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = randomMessage,
+                style = MaterialTheme.typography.body1
+            )
         }
     }
 }
