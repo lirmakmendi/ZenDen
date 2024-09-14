@@ -42,7 +42,7 @@ fun CustomAlertDialog(
                 if (score > 9) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = {
-//                        ZenDenAppRouter.navigateTo(Screen.HowToDealWithPanicAttackScreen)
+                        ZenDenAppRouter.navigateTo(Screen.OfflineRelaxationScreen)
                     }) {
                         Text("איך להתמודד עם התקף פאניקה")
                     }

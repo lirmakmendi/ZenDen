@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -181,5 +182,59 @@ fun RelaxationCard(title: String, description: String, imageRes: Int, detailedIn
                 )
             }
         }
+    }
+}
+
+
+@Composable
+fun OfflineRelaxationContent(paddingValues: PaddingValues) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        item {
+            Text(
+                "בחר טכניקת הרגעה כדי להתחיל:",
+                style = MaterialTheme.typography.h6
+            )
+        }
+        item {
+            RelaxationCard(
+                "נשימה עמוקה",
+                "תרגל נשימה עמוקה כדי לעזור להפחית מתח ולשפר את מצב הרוח שלך.",
+                R.drawable.deep_breathing,
+                "נשימה עמוקה היא טכניקה פשוטה ויעילה להפחתת מתח וחרדה. קח נשימה עמוקה דרך האף, החזק למשך כמה שניות, ונשוף באיטיות דרך הפה. חזור על התהליך מספר פעמים עד שתרגיש רגיעה.",
+                listOf()  // Empty list for offline mode
+            )
+        }
+        item {
+            RelaxationCard(
+                "דמיון מודרך",
+                "השתמש בדמיון שלך כדי לצאת למסע ויזואלי למקום או למצב שליו ומרגיע.",
+                R.drawable.guided_imagery,
+                "דמיון מודרך הוא טכניקה שבה אתה מדמיין את עצמך במקום רגוע ושליו, כמו חוף ים או יער שקט. הטכניקה עוזרת להרגיע את הגוף והנפש ולהפחית מתח וחרדה.",
+                listOf()  // Empty list for offline mode
+            )
+        }
+        item {
+            RelaxationCard(
+                "מדיטציית מיינדפולנס",
+                "שימו לב לרגע הנוכחי.",
+                R.drawable.meditation,
+                "מדיטציית מיינדפולנס היא טכניקה שבה מתמקדים בהווה ומתרכזים בתחושות הגוף, הנשימה והמחשבות ללא שיפוט. זה עוזר להפחית מתח ולהגביר את תחושת הרוגע והשלווה.",
+                listOf()  // Empty list for offline mode
+            )
+        }
+        item {
+            Text(
+                "לא ניתן להציג סרטונים במצב לא מקוון.",
+                style = MaterialTheme.typography.body2,
+                color = Color.Red,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+        // Add more techniques here
     }
 }
