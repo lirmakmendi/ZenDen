@@ -35,6 +35,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
@@ -684,4 +685,87 @@ fun TermsContent() {
             }
         }, style = TextStyle(lineHeight = 20.sp))
     }
+}
+
+
+@Composable
+fun <T : ViewModel> OfflineAppScaffold(
+    title: String,
+    homeViewModel: HomeViewModel,
+    secondaryViewModel: T? = null,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    enableMenu: Boolean = true,
+    onBackClicked: () -> Unit = { ZenDenAppRouter.navigateTo(Screen.LoginScreen) },
+    content: @Composable (PaddingValues) -> Unit
+) {
+    LaunchedEffect(key1 = true) {
+        if (enableMenu) {
+            homeViewModel.getUserData()
+        }
+    }
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            if (enableMenu) {
+                AppToolbar(
+                    toolbarTitle = title,
+                    logoutButtonClicked = {
+                        homeViewModel.logout()
+                    },
+                    navigationIconClicked = {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }
+                )
+            } else {
+                OfflineAppToolbar(
+                    toolbarTitle = title,
+                    onBackClicked = onBackClicked
+                )
+            }
+        },
+        drawerGesturesEnabled = enableMenu && scaffoldState.drawerState.isOpen,
+        drawerContent = if (enableMenu) {
+            {
+                NavigationDrawerHeader(("שלום " + homeViewModel.firstName.value) ?: "")
+                NavigationDrawerBody(
+                    navigationDrawerItems = DrawerItems.drawerItemsList,
+                    onNavigationItemClicked = { item ->
+                        when (item.itemId) {
+                            "dashboardScreen" -> ZenDenAppRouter.navigateTo(Screen.HomeScreen)
+                            "relaxationTechniquesScreen" -> ZenDenAppRouter.navigateTo(Screen.RelaxationScreen)
+                            "anxietyTrendsScreen" -> ZenDenAppRouter.navigateTo(Screen.AnxietyTrendsScreen)
+                            "AnswerPDSSScreen" -> ZenDenAppRouter.navigateTo(Screen.AnswerPDSSScreen)
+                            "myProfileScreen" -> ZenDenAppRouter.navigateTo(Screen.MyProfileScreen)
+                            "panicAttackInfoScreen" -> ZenDenAppRouter.navigateTo(Screen.PanicAttackInfoScreen)
+                            "CheckPanicAttackScreen" -> ZenDenAppRouter.navigateTo(Screen.CheckPanicAttackScreen)
+                            // Handle other cases as needed
+                        }
+                    }
+                )
+            }
+        } else {
+            null
+        }
+    ) { paddingValues ->
+        content(paddingValues)
+    }
+}
+
+
+@Composable
+fun OfflineAppToolbar(
+    toolbarTitle: String,
+    onBackClicked: () -> Unit = { ZenDenAppRouter.navigateTo(Screen.LoginScreen) }
+) {
+    TopAppBar(
+        title = { Text(text = toolbarTitle) },
+        navigationIcon = {
+            IconButton(onClick = onBackClicked) {
+                Icon(Icons.Filled.ArrowBack, contentDescription = "חזור")
+            }
+        }
+    )
 }

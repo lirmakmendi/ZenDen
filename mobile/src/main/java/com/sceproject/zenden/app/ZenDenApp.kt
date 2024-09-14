@@ -20,6 +20,7 @@ import com.sceproject.zenden.screens.PanicAttackInfoScreen
 import com.sceproject.zenden.screens.SignUpScreen
 import com.sceproject.zenden.screens.TermsAndConditionsScreen
 import com.sceproject.zenden.screens.CheckPanicAttackScreen
+import com.sceproject.zenden.screens.OfflineAnswerPDSSScreen
 import com.sceproject.zenden.screens.admin.AdminScreen
 import com.sceproject.zenden.screens.admin.DatabaseStatusScreen
 import com.sceproject.zenden.screens.admin.ManageUsersScreen
@@ -71,6 +72,10 @@ fun ZenDen(homeViewModel: HomeViewModel = viewModel()) {
 
                 is Screen.AnswerPDSSScreen -> {
                     AnswerPDSSScreen()
+                }
+
+                is Screen.OfflineAnswerPDSSScreen -> {
+                    OfflineAnswerPDSSScreen()
                 }
 
                 is Screen.MyProfileScreen -> {

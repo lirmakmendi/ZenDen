@@ -1,15 +1,17 @@
 package com.sceproject.zenden.data.viewmodels
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sceproject.zenden.data.db.contacts.Contact
 
 import com.sceproject.zenden.navigation.Screen
 import com.sceproject.zenden.navigation.ZenDenAppRouter
-import deleteUserAndSubcollections
 import deleteUserDataAndInitData
 import deleteUserFromEverything
 import kotlinx.coroutines.delay

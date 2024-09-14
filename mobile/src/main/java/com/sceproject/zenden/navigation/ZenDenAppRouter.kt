@@ -12,6 +12,7 @@ sealed class Screen {
     object RelaxationScreen : Screen()
     object AnxietyTrendsScreen : Screen()
     object AnswerPDSSScreen : Screen()
+    object OfflineAnswerPDSSScreen : Screen()
     object MyProfileScreen : Screen()
     object AdminScreen : Screen()
     object ManageUsersScreen : Screen()
