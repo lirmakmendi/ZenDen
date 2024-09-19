@@ -94,6 +94,17 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 ClickableLoginTextComponent(tryingToLogin = false, onTextSelected = {
                     ZenDenAppRouter.navigateTo(Screen.SignUpScreen)
                 })
+
+
+                Spacer(modifier = Modifier.weight(1f))  // This will push the button to the bottom
+
+                ButtonComponent(
+                    value = "מענה על PDSS במצב לא מקוון",
+                    onButtonClicked = {
+                        ZenDenAppRouter.navigateTo(Screen.OfflineAnswerPDSSScreen)
+                    },
+                    isEnabled = true
+                )
             }
         }
 
